@@ -11,7 +11,7 @@ from pyspark.sql.types import (
 )
 
 # Initialize Spark Context and Session
-spark = SparkSession.builder.appName("DecisionTreeModel").getOrCreate()
+spark = SparkSession.builder.appName("SampleData").getOrCreate()
 
 data = [
     (25, 50000, "Full-time", 1),
@@ -63,7 +63,7 @@ ohe = (
     for k, v in {
         "full_time": "Full-time",
         "part_time": "Part-time",
-        "student": "Student",
+        # "student": "Student",
     }.items()
 )
 

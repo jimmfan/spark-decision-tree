@@ -95,22 +95,13 @@ df_sql_rules = (
 df_sql_rules.show(20, False)
 
 csv_path = "./src/sample_data/data.csv"
-spark.read.csv(csv_path, header=True, inferSchema=True).createOrReplaceTempView("temp_data")
+training_data = spark.read.csv(csv_path, header=True, inferSchema=True)
+training_data.createOrReplaceTempView("temp_data")
 
 query = """
 SELECT *
 FROM temp_data
-WHERE income > 49000.0 AND full_time > 0.5 AND credit_age > 39.5 AND credit_age > 43.5 AND credit_age < 48.5
-"""
-
-filtered_df = spark.sql(query)
-filtered_df.show()
-
-
-query = """
-SELECT *
-FROM temp_data
-WHERE income > 49000.0 AND full_time > 0.5 AND credit_age > 39.5 AND credit_age > 43.5 
+WHERE income > 49000.0 AND full_time > 0.5 AND credit_age > 39.5 AND credit_age > 43.5
 """
 
 filtered_df = spark.sql(query)

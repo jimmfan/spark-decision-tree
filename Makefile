@@ -14,7 +14,7 @@ format.isort:
 format: format.isort format.black
 
 lints.format.check:
-	poetry run black --check ${SOURCE_OBJECTS}
+    poetry run black --check ${SOURCE_OBJECTS}
 	poetry run isort --check-only ${SOURCE_OBJECTS}
 
 test: setup
