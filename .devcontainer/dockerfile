@@ -1,0 +1,10 @@
+# Use the official Python image as a parent image
+FROM mcr.microsoft.com/devcontainers/python:0-3.10
+
+# Install Java (OpenJDK)
+RUN apt-get update && \
+    apt-get install -y openjdk-11-jdk && \
+    rm -rf /var/lib/apt/lists/*
+
+# Set the JAVA_HOME environment variable
+ENV JAVA_HOME /usr/lib/jvm/java-11-openjdk-arm64
