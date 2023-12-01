@@ -1,10 +1,7 @@
-import networkx as nx
 from pyspark.ml.classification import DecisionTreeClassifier
 from pyspark.ml.feature import VectorAssembler
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import col, explode
-from pyspark.sql.functions import sum as sql_sum
-from pyspark.sql.functions import udf, when
+from pyspark.sql.functions import col
 from pyspark.sql.types import (
     ArrayType,
     FloatType,

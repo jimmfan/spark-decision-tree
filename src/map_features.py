@@ -1,12 +1,10 @@
 import networkx as nx
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import col, explode
-from pyspark.sql.functions import sum as sql_sum
-from pyspark.sql.functions import udf, when
+from pyspark.sql.functions import col, udf
 from pyspark.sql.types import IntegerType
 
 # Initialize Spark Context and Session
-spark = SparkSession.builder.appName("DecisionTreeModel").getOrCreate()
+spark = SparkSession.builder.appName("MapDecisionTree").getOrCreate()
 
 features = ["credit_age", "income", "full_time", "part_time", "student"]
 label = "credit_approved"
@@ -18,10 +16,7 @@ model_df = spark.read.parquet("./src/model/dtc_model/data/*")
 node_cols = [
     "id",
     "prediction",
-    "impurity",
     "impurityStats",
-    "rawCount",
-    "gain",
     "leftChild",
     "rightChild",
     "split",
@@ -64,9 +59,6 @@ for rw in model_df.filter("leftChild > 0 and rightChild > 0").collect():
         ),
     )
 
-# RDD creation and transformation
-rdd_noderows = spark.sparkContext.parallelize(noderows).persist()
-
 # Create dictionary to save decision paths
 index_to_path_dct = {}
 for n in G.nodes():
@@ -79,7 +71,7 @@ for n in G.nodes():
 extract_label = udf(lambda v: int(v[1]), IntegerType())
 
 df_sql_rules = (
-    rdd_noderows.toDF()
+    model_df
     .select(
         "id",
         col("id").cast("string").alias("sql_rules"), # Duplicating id as string
@@ -95,7 +87,11 @@ df_sql_rules = (
 df_sql_rules.show(20, False)
 
 csv_path = "./src/sample_data/data.csv"
+
+# Read Training Data in
 training_data = spark.read.csv(csv_path, header=True, inferSchema=True)
+
+# Create Temp View for SQL Query
 training_data.createOrReplaceTempView("temp_data")
 
 query = """
