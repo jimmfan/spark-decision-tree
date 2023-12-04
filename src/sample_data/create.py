@@ -63,7 +63,7 @@ ohe = (
     for k, v in {
         "full_time": "Full-time",
         "part_time": "Part-time",
-        # "student": "Student",
+        "student": "Student",
     }.items()
 )
 
